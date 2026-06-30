@@ -1,4 +1,40 @@
 #!/bin/sh
 set -eu
-echo 'Err#err1(code=TARGET001 message="target-wasm run is not implemented yet." nodeId=target-wasm)' >&2
-exit 2
+
+program="${2:-.}"
+out="dist-wasm"
+profile="spa"
+port=""
+open_flag=""
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --out) out="${2:-dist-wasm}"; shift 2 ;;
+    --target-option)
+      value="${2:-}"
+      case "$value" in
+        wasm-profile=*) profile="${value#wasm-profile=}" ;;
+        port=*) port="${value#port=}" ;;
+        open-browser=false) open_flag="--no-open" ;;
+      esac
+      shift 2
+      ;;
+    --target-option=wasm-profile=*) profile="${1#--target-option=wasm-profile=}"; shift ;;
+    --target-option=port=*) port="${1#--target-option=port=}"; shift ;;
+    --target-option=open-browser=false) open_flag="--no-open"; shift ;;
+    --) break ;;
+    *) shift ;;
+  esac
+done
+
+case "$profile" in
+  cli|spa|fullstack) ;;
+  *) echo 'Err#err1(code=TARGET001 message="Unsupported wasm profile." nodeId=target-wasm)' >&2; exit 2 ;;
+esac
+
+AILANG_BIN="${AILANG_BIN:-ailang}"
+export AILANG_DISABLE_PACKAGE_TARGET_DISPATCH=1
+if [ -n "$port" ]; then
+  exec "$AILANG_BIN" run "$program" --target wasm32 --wasm-profile "$profile" --out "$out" --port "$port" $open_flag
+fi
+exec "$AILANG_BIN" run "$program" --target wasm32 --wasm-profile "$profile" --out "$out" $open_flag

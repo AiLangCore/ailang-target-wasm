@@ -1,4 +1,8 @@
 #!/bin/sh
 set -eu
-echo 'target-wasm doctor: scaffold installed'
+if ! command -v "${AILANG_BIN:-ailang}" >/dev/null 2>&1; then
+  echo 'Err#err1(code=TARGET001 message="ailang executable not found." nodeId=target-wasm)' >&2
+  exit 2
+fi
+echo 'target-wasm doctor: ok'
 exit 0

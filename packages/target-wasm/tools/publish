@@ -1,4 +1,29 @@
 #!/bin/sh
 set -eu
-echo 'Err#err1(code=TARGET001 message="target-wasm publish is not implemented yet." nodeId=target-wasm)' >&2
-exit 2
+
+program="${2:-.}"
+out="dist-wasm"
+profile="spa"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --out) out="${2:-dist-wasm}"; shift 2 ;;
+    --target-option)
+      value="${2:-}"
+      case "$value" in wasm-profile=*) profile="${value#wasm-profile=}" ;; esac
+      shift 2
+      ;;
+    --target-option=wasm-profile=*) profile="${1#--target-option=wasm-profile=}"; shift ;;
+    --) break ;;
+    *) shift ;;
+  esac
+done
+
+case "$profile" in
+  cli|spa|fullstack) ;;
+  *) echo 'Err#err1(code=TARGET001 message="Unsupported wasm profile." nodeId=target-wasm)' >&2; exit 2 ;;
+esac
+
+AILANG_BIN="${AILANG_BIN:-ailang}"
+export AILANG_DISABLE_PACKAGE_TARGET_DISPATCH=1
+exec "$AILANG_BIN" publish "$program" --target wasm32 --wasm-profile "$profile" --out "$out"
