@@ -1,7 +1,10 @@
 schema = "ailang.package-source.v1"
 name = "target-wasm"
-version = "0.0.1-alpha.2"
+version = "0.0.1-alpha.3"
 types = ["target", "tool", "template"]
+
+[dependencies]
+std-http = "0.0.1-alpha.9"
 
 [targets.wasm]
 id = "wasm"
@@ -11,7 +14,7 @@ profile = "wasm-browser"
 aliases = ["wasm32", "web"]
 defaultRunner = "run"
 artifactTypes = ["dir", "spa", "module"]
-options = ["wasm-profile", "server", "open-browser"]
+options = ["wasm-profile", "server", "open-browser", "port"]
 
 [targets.wasm.tools]
 run = []

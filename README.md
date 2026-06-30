@@ -2,7 +2,7 @@
 
 Official AiLang target package for WebAssembly and browser-hosted apps.
 
-Current package release: `0.0.1-alpha.2`.
+Current package release: `0.0.1-alpha.3`.
 
 ## Package
 
@@ -46,6 +46,7 @@ Declared options:
 wasm-profile
 server
 open-browser
+port
 ```
 
 ## Usage
