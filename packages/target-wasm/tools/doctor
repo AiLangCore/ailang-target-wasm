@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+echo 'target-wasm doctor: scaffold installed'
+exit 0

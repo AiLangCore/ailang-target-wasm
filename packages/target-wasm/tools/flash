@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+echo 'Err#err1(code=TARGET001 message="target-wasm flash is not applicable yet." nodeId=target-wasm)' >&2
+exit 2
